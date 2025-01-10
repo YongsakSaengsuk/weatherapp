@@ -11,7 +11,12 @@ class TopPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Icon(Icons.add),
-          Text("Location"),
+          Row(
+            children: [
+              Icon(Icons.location_on),
+              Text("Location"),
+            ],
+          ),
           Icon(Icons.menu)
         ],
       ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weatherapp/body_page.dart';
 import 'package:weatherapp/top_page.dart';
 
 class ForecastPage extends StatefulWidget {
@@ -13,13 +14,35 @@ class _ForecastPageState extends State<ForecastPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Center(
-          child: Column(
-            children: [
-              TopPage(),
-              Text("Body"),
-              Text("5 day"),
-            ],
+        body: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.blue, Colors.white],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+          child: Center(
+            child: Column(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: const Color.fromARGB(220, 255, 255, 255),
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(30),
+                      bottomRight: Radius.circular(30),
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      TopPage(),
+                      BodyPage(),
+                      Text("5 day"),
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),
