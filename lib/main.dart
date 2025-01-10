@@ -11,31 +11,37 @@ class WeatherApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        body: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.blue, Colors.white],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
+      home: SafeArea(
+        child: Scaffold(
+          body: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.blue, Colors.white],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
             ),
-          ),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SvgPicture.asset(
-                  "assets/images/cloudy_sunny.svg",
-                  height: 200,
-                ),
-                Text(
-                  "Weather Forecasts",
-                  style: TextStyle(fontSize: 30),
-                ),
-                SizedBox(height: 20),
-                ElevatedButton(
-                    onPressed: () {}, child: const Text("Get Start")),
-              ],
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(
+                    "assets/images/cloudy_sunny.svg",
+                    height: 200,
+                  ),
+                  Text(
+                    "Weather Forecasts",
+                    style: TextStyle(fontSize: 30),
+                  ),
+                  SizedBox(height: 20),
+                  ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: Color(0xFF08A0FF)),
+                      onPressed: () {},
+                      child: const Text("Get Start")),
+                ],
+              ),
             ),
           ),
         ),
