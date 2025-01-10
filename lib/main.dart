@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:weatherapp/forecast_page.dart';
 
 void main() {
   runApp(const WeatherApp());
@@ -10,38 +11,49 @@ class WeatherApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: SafeArea(
-        child: Scaffold(
-          body: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Colors.blue, Colors.white],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
+    return MaterialApp(routes: {
+      '/Forecastpage': (context) => const ForecastPage(),
+    }, home: HomePage());
+  }
+}
+
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        body: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [Colors.blue, Colors.white],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
             ),
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SvgPicture.asset(
-                    "assets/images/cloudy_sunny.svg",
-                    height: 200,
-                  ),
-                  Text(
-                    "Weather Forecasts",
-                    style: TextStyle(fontSize: 30),
-                  ),
-                  SizedBox(height: 20),
-                  ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          foregroundColor: Colors.white,
-                          backgroundColor: Color(0xFF08A0FF)),
-                      onPressed: () {},
-                      child: const Text("Get Start")),
-                ],
-              ),
+          ),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SvgPicture.asset(
+                  "assets/images/cloudy_sunny.svg",
+                  height: 200,
+                ),
+                Text(
+                  "Weather Forecasts",
+                  style: TextStyle(fontSize: 30),
+                ),
+                SizedBox(height: 20),
+                ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Color(0xFF08A0FF)),
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/Forecastpage');
+                    },
+                    child: const Text("Get Start")),
+              ],
             ),
           ),
         ),
