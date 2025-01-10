@@ -33,7 +33,6 @@ class _BodyPageState extends State<BodyPage> {
               right: 5,
               bottom: 20,
               child: SvgPicture.asset(
-                color: Colors.grey,
                 "assets/images/cloudy_sunny.svg",
                 height: 150,
               ),
@@ -65,8 +64,15 @@ class _BodyPageState extends State<BodyPage> {
           padding: EdgeInsets.all(20),
           margin: EdgeInsets.only(top: 30, left: 30, right: 30),
           decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Colors.blueGrey,
+                blurRadius: 9,
+                offset: Offset(0, 4),
+              )
+            ],
             borderRadius: BorderRadius.circular(30),
-            color: Colors.green,
+            color: Colors.white,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -96,12 +102,19 @@ class _BodyPageState extends State<BodyPage> {
           padding: EdgeInsets.all(20),
           margin: EdgeInsets.all(30),
           decoration: BoxDecoration(
+            boxShadow: [
+              BoxShadow(
+                color: Colors.blueGrey,
+                blurRadius: 9,
+                offset: Offset(0, 4),
+              )
+            ],
             borderRadius: BorderRadius.circular(30),
-            color: Colors.green,
+            color: Colors.white,
           ),
           child: Column(
             children: [
-              Text('Feel like'),
+              Text('Feel like : '),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

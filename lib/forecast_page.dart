@@ -28,7 +28,20 @@ class _ForecastPageState extends State<ForecastPage> {
                 SingleChildScrollView(
                   child: Container(
                     decoration: BoxDecoration(
-                      color: const Color.fromARGB(220, 255, 255, 255),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color.fromARGB(255, 188, 188, 188)
+                              .withOpacity(0.5),
+                          spreadRadius: 5,
+                          blurRadius: 5,
+                          offset: Offset(2, 3),
+                        ),
+                      ],
+                      gradient: LinearGradient(
+                        colors: [Colors.blue, Colors.white],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                      ),
                       borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(30),
                         bottomRight: Radius.circular(30),
@@ -38,10 +51,24 @@ class _ForecastPageState extends State<ForecastPage> {
                       children: [
                         TopPage(),
                         BodyPage(),
-                        Text("5 day",),
-                        Container(height: 10,)
                       ],
                     ),
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.all(20),
+                  height: 100,
+                  child: Column(
+                    children: [
+                      Text("5-Days Forecasts"),
+                      Expanded(
+                        child: ListView(
+                          children: [
+                            Text("test")
+                          ],
+                        ),
+                      )
+                    ],
                   ),
                 )
               ],
