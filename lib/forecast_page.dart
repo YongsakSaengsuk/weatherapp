@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weatherapp/top_page.dart';
 
 class ForecastPage extends StatefulWidget {
   const ForecastPage({super.key});
@@ -15,7 +16,7 @@ class _ForecastPageState extends State<ForecastPage> {
         body: Center(
           child: Column(
             children: [
-              Text("Top"),
+              TopPage(),
               Text("Body"),
               Text("5 day"),
             ],
