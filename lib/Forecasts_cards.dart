@@ -4,9 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class ForecastsCards extends StatefulWidget {
-  const ForecastsCards({super.key, required this.minTemp, required this.maxTemp});
+  const ForecastsCards({super.key, required this.minTemp, required this.maxTemp,required this.iconID});
   final int minTemp;
   final int maxTemp;
+  final String iconID;
   @override
   State<ForecastsCards> createState() => _FivedayforecastState();
 }
@@ -32,12 +33,9 @@ class _FivedayforecastState extends State<ForecastsCards> {
       width: 75,
       child: Column(
         children: [
-          SvgPicture.asset(
-            "assets/images/cloudy_sunny.svg",
-            height: 30,
-          ),
-          Text(widget.minTemp.toString()),
-          Text(widget.maxTemp.toString())
+          Image.network(widget.iconID,height: 40,),
+          Text("${widget.minTemp.toString()}°C"),
+          Text("${widget.maxTemp.toString()}°C")
         ],
       ),
     );

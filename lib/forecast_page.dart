@@ -16,7 +16,7 @@ class _ForecastPageState extends State<ForecastPage> {
   late WeatherFactory wf;
   late List<dynamic> fiveDayForecast;
   Weather? currentWeather;
-  String cityName = 'Bangkok';
+  String cityName = 'London';
   @override
   void initState() {
     super.initState();
@@ -112,6 +112,7 @@ class _ForecastPageState extends State<ForecastPage> {
                                           maxTemp:
                                               day.tempMax?.celsius?.toInt() ??
                                                   0,
+                                          iconID: 'http://openweathermap.org/img/wn/${day.weatherIcon}@4x.png',
                                         );
                                       },
                                     ))
