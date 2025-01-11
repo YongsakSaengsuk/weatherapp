@@ -97,7 +97,7 @@ class _BodyPageState extends State<BodyPage> {
                       height: 50,
                     ),
                   ),
-                  Text("Humidity", textAlign: TextAlign.center),
+                  Text("${wt.humidity?.toStringAsFixed(0)}%", textAlign: TextAlign.center),
                 ],
               ),
             )
