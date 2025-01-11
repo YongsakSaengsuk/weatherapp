@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:weather/weather.dart';
 import 'package:weatherapp/Forecasts_cards.dart';
 import 'package:weatherapp/body_page.dart';
 import 'package:weatherapp/top_page.dart';
-
-enum AppState { NOT_DOWNLOADED, DOWNLOADING, FINISHED_DOWNLOADING }
 
 class ForecastPage extends StatefulWidget {
   const ForecastPage({super.key});
@@ -17,8 +14,9 @@ class ForecastPage extends StatefulWidget {
 class _ForecastPageState extends State<ForecastPage> {
   String key = 'e8ae3996e6d088af9b609e6c7057dcc0';
   late WeatherFactory wf;
+  late List<dynamic> fiveDayForecast;
   Weather? currentWeather;
-
+  String cityName = 'Bangkok';
   @override
   void initState() {
     super.initState();
@@ -28,10 +26,12 @@ class _ForecastPageState extends State<ForecastPage> {
 
   Future<void> fetchWeather() async {
     try {
-      Weather weather = await wf.currentWeatherByCityName('Chumphon');
+      Weather weather = await wf.currentWeatherByCityName(cityName);
+      List<dynamic> forecast = await wf.fiveDayForecastByCityName(cityName);
       setState(() {
         currentWeather = weather;
-        print(currentWeather);
+        fiveDayForecast = forecast;
+        print(fiveDayForecast);
       });
     } catch (e) {
       print("Error fetching weather: $e");
@@ -50,66 +50,82 @@ class _ForecastPageState extends State<ForecastPage> {
               end: Alignment.bottomCenter,
             ),
           ),
-          child: Center(
-            child: ListView(
-              children: [
-                SingleChildScrollView(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color.fromARGB(108, 188, 188, 188),
-                          spreadRadius: 5,
-                          blurRadius: 5,
-                          offset: Offset(2, 3),
+          child: FutureBuilder(
+            future: wf.currentWeatherByCityName(cityName),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else if (snapshot.hasData) {
+                return ListView(
+                  children: [
+                    SingleChildScrollView(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color.fromARGB(108, 188, 188, 188),
+                              spreadRadius: 5,
+                              blurRadius: 5,
+                              offset: Offset(2, 3),
+                            ),
+                          ],
+                          gradient: LinearGradient(
+                            colors: [Colors.blue, Colors.white],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                          ),
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(30),
+                            bottomRight: Radius.circular(30),
+                          ),
                         ),
-                      ],
-                      gradient: LinearGradient(
-                        colors: [Colors.blue, Colors.white],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                      ),
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(30),
-                        bottomRight: Radius.circular(30),
-                      ),
-                    ),
-                    child: Column(
-                      children: [
-                        TopPage(location: currentWeather?.areaName),
-                        BodyPage(
-                          wt: currentWeather!,
-                        ),
-                        
-                      ],
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.all(20),
-                  height: 200,
-                  child: Column(
-                    children: [
-                      Text("5-Days Forecasts"),
-                      Expanded(
-                        child: ListView(
-                          shrinkWrap: true,
-                          padding: const EdgeInsets.all(2),
-                          scrollDirection: Axis.horizontal,
+                        child: Column(
                           children: [
-                            ForecastsCards(minTemp: 12, maxTemp: 20),
-                            ForecastsCards(minTemp: 12, maxTemp: 25),
-                            ForecastsCards(minTemp: 12, maxTemp: 26),
-                            ForecastsCards(minTemp: 12, maxTemp: 27),
-                            ForecastsCards(minTemp: 12, maxTemp: 28),
+                            TopPage(location: snapshot.data?.areaName),
+                            BodyPage(
+                              wt: snapshot.data!,
+                            ),
                           ],
                         ),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),
+                      ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.all(20),
+                      height: 200,
+                      child: Column(
+                        children: [
+                          Text("5-Days Forecasts"),
+                          Expanded(
+                              child: fiveDayForecast.isEmpty
+                                  ? Center(child: CircularProgressIndicator())
+                                  : ListView.builder(
+                                      itemCount: 5,
+                                      scrollDirection: Axis.horizontal,
+                                      itemBuilder: (context, index) {
+                                        final day = fiveDayForecast[index];
+                                        return ForecastsCards(
+                                          minTemp:
+                                              day.tempMin?.celsius?.toInt() ??
+                                                  0,
+                                          maxTemp:
+                                              day.tempMax?.celsius?.toInt() ??
+                                                  0,
+                                        );
+                                      },
+                                    ))
+                        ],
+                      ),
+                    )
+                  ],
+                );
+              } else {
+                return Center(
+                  child: Text('No Data available'),
+                );
+              }
+            },
           ),
         ),
       ),

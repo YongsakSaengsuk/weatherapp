@@ -5,8 +5,8 @@ import 'package:flutter_svg/svg.dart';
 
 class ForecastsCards extends StatefulWidget {
   const ForecastsCards({super.key, required this.minTemp, required this.maxTemp});
-  final double? minTemp;
-  final double? maxTemp;
+  final int minTemp;
+  final int maxTemp;
   @override
   State<ForecastsCards> createState() => _FivedayforecastState();
 }

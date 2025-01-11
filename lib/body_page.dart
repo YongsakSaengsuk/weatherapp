@@ -60,7 +60,7 @@ class _BodyPageState extends State<BodyPage> {
             ),
             Positioned(
               bottom: 50,
-              left: 50,
+              left: 60,
               child: Text(
                 wt.weatherDescription ?? "null",
                 style: TextStyle(fontSize: 20),
