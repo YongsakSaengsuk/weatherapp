@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:weather/weather.dart';
 
@@ -20,10 +19,16 @@ class _BodyPageState extends State<BodyPage> {
 
   String? formatWeatherDate(DateTime? date) {
     if (date == null) {
-      return null; // Handle null case
+      return null;
     }
-    // Format the date
     return DateFormat('dd MMM yyyy, HH:mm').format(date);
+  }
+
+  String? formatSunTime(DateTime? sun) {
+    if (sun == null) {
+      return null;
+    }
+    return DateFormat("HH:mm").format(sun);
   }
 
   @override
@@ -100,7 +105,7 @@ class _BodyPageState extends State<BodyPage> {
                   )
                 ],
               ),
-              Text("06:00"),
+              Text(formatSunTime(wt.sunrise) ?? "null"),
               Column(
                 children: [
                   Icon(Icons.wb_sunny_outlined),
@@ -109,7 +114,7 @@ class _BodyPageState extends State<BodyPage> {
                   )
                 ],
               ),
-              Text("18:00")
+              Text(formatSunTime(wt.sunset) ?? "null")
             ],
           ),
         ),
