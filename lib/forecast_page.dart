@@ -21,13 +21,13 @@ class _ForecastPageState extends State<ForecastPage> {
   void initState() {
     super.initState();
     wf = WeatherFactory(key);
-    fetchWeather();
+    fetchWeather(cityName);
   }
 
-  Future<void> fetchWeather() async {
+  Future<void> fetchWeather(city) async {
     try {
-      Weather weather = await wf.currentWeatherByCityName(cityName);
-      List<dynamic> forecast = await wf.fiveDayForecastByCityName(cityName);
+      Weather weather = await wf.currentWeatherByCityName(city);
+      List<dynamic> forecast = await wf.fiveDayForecastByCityName(city);
       setState(() {
         currentWeather = weather;
         fiveDayForecast = forecast;
@@ -36,6 +36,13 @@ class _ForecastPageState extends State<ForecastPage> {
     } catch (e) {
       print("Error fetching weather: $e");
     }
+  }
+
+  void handleLocationChange(String newLocation) {
+    setState(() {
+      cityName = newLocation;
+    });
+    fetchWeather(newLocation);
   }
 
   @override
@@ -83,7 +90,9 @@ class _ForecastPageState extends State<ForecastPage> {
                         ),
                         child: Column(
                           children: [
-                            TopPage(location: snapshot.data?.areaName),
+                            TopPage(
+                                location: snapshot.data?.areaName,
+                                onLocationChange: handleLocationChange),
                             BodyPage(
                               wt: snapshot.data!,
                             ),
@@ -98,24 +107,24 @@ class _ForecastPageState extends State<ForecastPage> {
                         children: [
                           Text("5-Days Forecasts"),
                           Expanded(
-                              child: fiveDayForecast.isEmpty
-                                  ? Center(child: CircularProgressIndicator())
-                                  : ListView.builder(
-                                      itemCount: 5,
-                                      scrollDirection: Axis.horizontal,
-                                      itemBuilder: (context, index) {
-                                        final day = fiveDayForecast[index];
-                                        return ForecastsCards(
-                                          minTemp:
-                                              day.tempMin?.celsius?.toInt() ??
-                                                  0,
-                                          maxTemp:
-                                              day.tempMax?.celsius?.toInt() ??
-                                                  0,
-                                          iconID: 'http://openweathermap.org/img/wn/${day.weatherIcon}@4x.png',
-                                        );
-                                      },
-                                    ))
+                            child: fiveDayForecast.isEmpty
+                                ? Center(child: CircularProgressIndicator())
+                                : ListView.builder(
+                                    itemCount: 5,
+                                    scrollDirection: Axis.horizontal,
+                                    itemBuilder: (context, index) {
+                                      final day = fiveDayForecast[index];
+                                      return ForecastsCards(
+                                        minTemp:
+                                            day.tempMin?.celsius?.toInt() ?? 0,
+                                        maxTemp:
+                                            day.tempMax?.celsius?.toInt() ?? 0,
+                                        iconID:
+                                            'http://openweathermap.org/img/wn/${day.weatherIcon}@4x.png',
+                                      );
+                                    },
+                                  ),
+                          )
                         ],
                       ),
                     )
