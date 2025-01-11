@@ -1,19 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
+import 'package:weather/weather.dart';
 
 class BodyPage extends StatefulWidget {
-  const BodyPage({super.key});
-
+  const BodyPage({super.key, required this.wt});
+  final Weather wt;
   @override
   State<BodyPage> createState() => _BodyPageState();
 }
 
 class _BodyPageState extends State<BodyPage> {
+  late final Weather wt;
+  @override
+  void initState() {
+    super.initState();
+    wt = widget.wt;
+  }
+
+  String? formatWeatherDate(DateTime? date) {
+    if (date == null) {
+      return null; // Handle null case
+    }
+    // Format the date
+    return DateFormat('dd MMM yyyy, HH:mm').format(date);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text("Date & Time"),
+        Text(formatWeatherDate(wt.date) ?? "null"),
         Stack(
           children: [
             Positioned(
@@ -23,25 +40,23 @@ class _BodyPageState extends State<BodyPage> {
               ),
             ),
             Positioned(
+              right: 50,
               top: 20,
-              child: Text(
-                "20°",
-                style: TextStyle(fontSize: 100),
-              ),
+              child: Text("${wt.temperature?.celsius?.toStringAsFixed(0)}º",
+                  style: TextStyle(fontSize: 100)),
             ),
             Positioned(
-              right: 5,
-              bottom: 20,
-              child: SvgPicture.asset(
-                "assets/images/cloudy_sunny.svg",
-                height: 150,
-              ),
+              right: 0,
+              bottom: 50,
+              child: Image.network(
+                  width: 150,
+                  'http://openweathermap.org/img/wn/${wt.weatherIcon}@4x.png'),
             ),
             Positioned(
-              left: 5,
-              bottom: 60,
+              bottom: 50,
+              left: 50,
               child: Text(
-                "Cloudy",
+                wt.weatherDescription ?? "null",
                 style: TextStyle(fontSize: 20),
               ),
             )
@@ -66,7 +81,7 @@ class _BodyPageState extends State<BodyPage> {
           decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(
-                color: Colors.blueGrey,
+                color: Colors.grey.shade400,
                 blurRadius: 9,
                 offset: Offset(0, 4),
               )
@@ -104,7 +119,7 @@ class _BodyPageState extends State<BodyPage> {
           decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(
-                color: Colors.blueGrey,
+                color: Colors.grey.shade400,
                 blurRadius: 9,
                 offset: Offset(0, 4),
               )

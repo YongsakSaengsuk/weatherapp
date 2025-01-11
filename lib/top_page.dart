@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class TopPage extends StatelessWidget {
-  const TopPage({super.key});
-
+  const TopPage({super.key,required this.location});
+  final String? location;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -14,7 +14,7 @@ class TopPage extends StatelessWidget {
           Row(
             children: [
               Icon(Icons.location_on),
-              Text("Location"),
+              Text(location!),
             ],
           ),
           Icon(Icons.menu)

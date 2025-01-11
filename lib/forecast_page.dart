@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:weather/weather.dart';
+import 'package:weatherapp/Forecasts_cards.dart';
 import 'package:weatherapp/body_page.dart';
 import 'package:weatherapp/top_page.dart';
+
+enum AppState { NOT_DOWNLOADED, DOWNLOADING, FINISHED_DOWNLOADING }
 
 class ForecastPage extends StatefulWidget {
   const ForecastPage({super.key});
@@ -10,6 +15,29 @@ class ForecastPage extends StatefulWidget {
 }
 
 class _ForecastPageState extends State<ForecastPage> {
+  String key = 'e8ae3996e6d088af9b609e6c7057dcc0';
+  late WeatherFactory wf;
+  Weather? currentWeather;
+
+  @override
+  void initState() {
+    super.initState();
+    wf = WeatherFactory(key);
+    fetchWeather();
+  }
+
+  Future<void> fetchWeather() async {
+    try {
+      Weather weather = await wf.currentWeatherByCityName('Chumphon');
+      setState(() {
+        currentWeather = weather;
+        print(currentWeather);
+      });
+    } catch (e) {
+      print("Error fetching weather: $e");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -30,8 +58,7 @@ class _ForecastPageState extends State<ForecastPage> {
                     decoration: BoxDecoration(
                       boxShadow: [
                         BoxShadow(
-                          color: const Color.fromARGB(255, 188, 188, 188)
-                              .withOpacity(0.5),
+                          color: const Color.fromARGB(108, 188, 188, 188),
                           spreadRadius: 5,
                           blurRadius: 5,
                           offset: Offset(2, 3),
@@ -49,22 +76,31 @@ class _ForecastPageState extends State<ForecastPage> {
                     ),
                     child: Column(
                       children: [
-                        TopPage(),
-                        BodyPage(),
+                        TopPage(location: currentWeather?.areaName),
+                        BodyPage(
+                          wt: currentWeather!,
+                        ),
                       ],
                     ),
                   ),
                 ),
                 Container(
                   padding: EdgeInsets.all(20),
-                  height: 100,
+                  height: 200,
                   child: Column(
                     children: [
                       Text("5-Days Forecasts"),
                       Expanded(
                         child: ListView(
+                          shrinkWrap: true,
+                          padding: const EdgeInsets.all(2),
+                          scrollDirection: Axis.horizontal,
                           children: [
-                            Text("test")
+                            ForecastsCards(minTemp: 12, maxTemp: 20),
+                            ForecastsCards(minTemp: 12, maxTemp: 25),
+                            ForecastsCards(minTemp: 12, maxTemp: 26),
+                            ForecastsCards(minTemp: 12, maxTemp: 27),
+                            ForecastsCards(minTemp: 12, maxTemp: 28),
                           ],
                         ),
                       )
