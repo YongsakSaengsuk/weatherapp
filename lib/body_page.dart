@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:weather/weather.dart';
 
@@ -70,13 +71,35 @@ class _BodyPageState extends State<BodyPage> {
         Row(
           children: [
             Expanded(
-              child: Text(
-                "wind",
-                textAlign: TextAlign.center,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SvgPicture.network(
+                      "https://www.svgrepo.com/show/522344/wind.svg",
+                      height: 40,
+                    ),
+                  ),
+                  Text(
+                    "${wt.windSpeed} m/s",
+                    textAlign: TextAlign.center,
+                  ),
+                ],
               ),
             ),
             Expanded(
-              child: Text("Humidity", textAlign: TextAlign.center),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: SvgPicture.network(
+                      "https://www.svgrepo.com/show/458235/humidity.svg",
+                      height: 50,
+                    ),
+                  ),
+                  Text("Humidity", textAlign: TextAlign.center),
+                ],
+              ),
             )
           ],
         ),
@@ -98,21 +121,11 @@ class _BodyPageState extends State<BodyPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Column(
-                children: [
-                  Icon(Icons.sunny),
-                  Text(
-                    "SunRise",
-                  )
-                ],
+                children: [Icon(Icons.sunny), Text("SunRise")],
               ),
               Text(formatSunTime(wt.sunrise) ?? "null"),
               Column(
-                children: [
-                  Icon(Icons.wb_sunny_outlined),
-                  Text(
-                    "SunSet",
-                  )
-                ],
+                children: [Icon(Icons.wb_sunny_outlined), Text("SunSet")],
               ),
               Text(formatSunTime(wt.sunset) ?? "null")
             ],
@@ -134,14 +147,15 @@ class _BodyPageState extends State<BodyPage> {
           ),
           child: Column(
             children: [
-              Text('Feel like : '),
+              Text(
+                  'Feel like : ${wt.tempFeelsLike?.celsius?.toStringAsFixed(0)}ºC'),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Temp Min",
-                  ),
-                  Text("Temp Max"),
+                      "Temp Min : ${wt.tempMin?.celsius?.toStringAsFixed(0)}ºC"),
+                  Text(
+                      "Temp Max : ${wt.tempMax?.celsius?.toStringAsFixed(0)}ºC"),
                 ],
               ),
             ],
