@@ -4,7 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:weatherapp/forecast_page.dart';
 
 void main() async {
-  await dotenv.load(fileName: ".env";)
+  await dotenv.load(fileName: ".env");
   runApp(const WeatherApp());
 }
 
