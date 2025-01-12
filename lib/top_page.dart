@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class TopPage extends StatefulWidget {
-  const TopPage({super.key, required this.location,required this.onLocationChange});
+  const TopPage(
+      {super.key, required this.location, required this.onLocationChange});
   final String? location;
   final void Function(String newLocation) onLocationChange;
   @override
@@ -24,22 +25,42 @@ class _TopPageState extends State<TopPage> {
                   builder: (context) {
                     return Column(
                       children: [
-                        Row(
-                          children: [
-                            IconButton(
-                                onPressed: () {
-                                  //back
-                                },
-                                icon: Icon(Icons.arrow_back)),
-                            IconButton(
-                                onPressed: () {
-                                  widget.onLocationChange(textController.text);
-                                  Navigator.pop(context);
-                                }, icon: Icon(Icons.done)),
-                          ],
+                        Padding(
+                          padding: const EdgeInsets.all(18.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              IconButton(
+                                  onPressed: () {
+                                    //back
+                                  },
+                                  icon: Icon(Icons.arrow_back)),
+                              IconButton(
+                                  onPressed: () {
+                                    widget.onLocationChange(textController.text);
+                                    Navigator.pop(context);
+                                  },
+                                  icon: Icon(Icons.done)),
+                            ],
+                          ),
                         ),
-                        TextField(
-                          controller: textController,
+                        Container(
+                          margin: EdgeInsets.all(20),
+                          child: TextField(
+                            controller: textController,
+                            decoration: InputDecoration(
+                                hintText: 'Enter Location or Coordinates',
+                                hintStyle:
+                                    TextStyle(color: Colors.grey, fontSize: 16),
+                                filled: true,
+                                fillColor: Colors.grey.shade300,
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 15, horizontal: 20),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  borderSide: BorderSide.none,
+                                )),
+                          ),
                         )
                       ],
                     );

@@ -17,6 +17,8 @@ class _ForecastPageState extends State<ForecastPage> {
   late List<dynamic> fiveDayForecast;
   Weather? currentWeather;
   String cityName = 'London';
+  double latitude = 51.509865;
+  double longitude = -0.118092;
   @override
   void initState() {
     super.initState();
@@ -24,14 +26,27 @@ class _ForecastPageState extends State<ForecastPage> {
     fetchWeather(cityName);
   }
 
-  Future<void> fetchWeather(city) async {
+  Future<void> fetchWeather(String input) async {
     try {
-      Weather weather = await wf.currentWeatherByCityName(city);
-      List<dynamic> forecast = await wf.fiveDayForecastByCityName(city);
+      Weather weather;
+      List<dynamic> forecast;
+
+      final latLonRegex = RegExp(r'^-?\d+(\.\d+)?,-?\d+(\.\d+)?$');
+      if (latLonRegex.hasMatch(input)) {
+        final parts = input.split(',');
+        double latitude = double.parse(parts[0].trim());
+        double longitude = double.parse(parts[1].trim());
+        weather = await wf.currentWeatherByLocation(latitude, longitude);
+        forecast = await wf.fiveDayForecastByLocation(latitude, longitude);
+        print("Fetching weather for lat: $latitude, lon: $longitude");
+      } else {
+        weather = await wf.currentWeatherByCityName(input);
+        forecast = await wf.fiveDayForecastByCityName(input);
+        print("Fetching weather for city: $input");
+      }
       setState(() {
         currentWeather = weather;
         fiveDayForecast = forecast;
-        print(fiveDayForecast);
       });
     } catch (e) {
       print("Error fetching weather: $e");
@@ -58,7 +73,7 @@ class _ForecastPageState extends State<ForecastPage> {
             ),
           ),
           child: FutureBuilder(
-            future: wf.currentWeatherByCityName(cityName),
+            future:  wf.currentWeatherByCityName(cityName),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator());
@@ -91,10 +106,10 @@ class _ForecastPageState extends State<ForecastPage> {
                         child: Column(
                           children: [
                             TopPage(
-                                location: snapshot.data?.areaName,
+                                location: currentWeather?.areaName,
                                 onLocationChange: handleLocationChange),
                             BodyPage(
-                              wt: snapshot.data!,
+                              wt: currentWeather,
                             ),
                           ],
                         ),
