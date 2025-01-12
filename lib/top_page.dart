@@ -36,12 +36,22 @@ class _TopPageState extends State<TopPage> {
                                 widget.onLocationChange(textController.text);
                                 Navigator.pop(context);
                               } else {
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(SnackBar(
-                                  content: Text("Please Enter City"),
-                                  backgroundColor: Colors.amber,
-                                  duration: Duration(seconds: 3),
-                                ));
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text('warning'),
+                                      content: Text("Please Enter City"),
+                                      actions: [
+                                        TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text('ok'))
+                                      ],
+                                    );
+                                  },
+                                );
                               }
                             },
                             icon: Icon(Icons.done)),
