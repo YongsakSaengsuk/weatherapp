@@ -14,7 +14,7 @@ class ForecastPage extends StatefulWidget {
 class _ForecastPageState extends State<ForecastPage> {
   String key = 'e8ae3996e6d088af9b609e6c7057dcc0';
   late WeatherFactory wf;
-  late List<dynamic> fiveDayForecast;
+  List<dynamic> fiveDayForecast = [];
   Weather? currentWeather;
   String cityName = 'London';
   double latitude = 51.509865;
@@ -60,6 +60,35 @@ class _ForecastPageState extends State<ForecastPage> {
     fetchWeather(newLocation);
   }
 
+  Widget _dayForecasts() {
+    return Container(
+      padding: EdgeInsets.all(20),
+      height: 200,
+      child: Column(
+        children: [
+          Text("5-Days Forecasts"),
+          Expanded(
+            child: fiveDayForecast.isEmpty
+                ? Center(child: CircularProgressIndicator())
+                : ListView.builder(
+                    itemCount: 5,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      final day = fiveDayForecast[index];
+                      return ForecastsCards(
+                        minTemp: day.tempMin?.celsius?.toInt() ?? 0,
+                        maxTemp: day.tempMax?.celsius?.toInt() ?? 0,
+                        iconID:
+                            'http://openweathermap.org/img/wn/${day.weatherIcon}@4x.png',
+                      );
+                    },
+                  ),
+          )
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -73,8 +102,11 @@ class _ForecastPageState extends State<ForecastPage> {
             ),
           ),
           child: FutureBuilder(
-            future:  wf.currentWeatherByCityName(cityName),
-            builder: (context, snapshot) {
+            future: Future.wait([
+              wf.currentWeatherByCityName(cityName),
+              wf.fiveDayForecastByCityName(cityName),
+            ]),
+            builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
@@ -115,34 +147,7 @@ class _ForecastPageState extends State<ForecastPage> {
                         ),
                       ),
                     ),
-                    Container(
-                      padding: EdgeInsets.all(20),
-                      height: 200,
-                      child: Column(
-                        children: [
-                          Text("5-Days Forecasts"),
-                          Expanded(
-                            child: fiveDayForecast.isEmpty
-                                ? Center(child: CircularProgressIndicator())
-                                : ListView.builder(
-                                    itemCount: 5,
-                                    scrollDirection: Axis.horizontal,
-                                    itemBuilder: (context, index) {
-                                      final day = fiveDayForecast[index];
-                                      return ForecastsCards(
-                                        minTemp:
-                                            day.tempMin?.celsius?.toInt() ?? 0,
-                                        maxTemp:
-                                            day.tempMax?.celsius?.toInt() ?? 0,
-                                        iconID:
-                                            'http://openweathermap.org/img/wn/${day.weatherIcon}@4x.png',
-                                      );
-                                    },
-                                  ),
-                          )
-                        ],
-                      ),
-                    )
+                    _dayForecasts(),
                   ],
                 );
               } else {
