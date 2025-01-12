@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:weather/weather.dart';
 import 'package:weatherapp/Forecasts_cards.dart';
 import 'package:weatherapp/body_page.dart';
@@ -12,13 +13,16 @@ class ForecastPage extends StatefulWidget {
 }
 
 class _ForecastPageState extends State<ForecastPage> {
-  String key = 'e8ae3996e6d088af9b609e6c7057dcc0';
+  String key = dotenv.env['API_KEY'] ?? '';
   late WeatherFactory wf;
+
   List<dynamic> fiveDayForecast = [];
   Weather? currentWeather;
+
   String cityName = 'London';
   double latitude = 51.509865;
   double longitude = -0.118092;
+
   @override
   void initState() {
     super.initState();
@@ -58,6 +62,40 @@ class _ForecastPageState extends State<ForecastPage> {
       cityName = newLocation;
     });
     fetchWeather(newLocation);
+  }
+
+  Widget _mainForecasts() {
+    return Container(
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: const Color.fromARGB(108, 188, 188, 188),
+            spreadRadius: 5,
+            blurRadius: 5,
+            offset: Offset(2, 3),
+          ),
+        ],
+        gradient: LinearGradient(
+          colors: [Colors.blue, Colors.white],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(30),
+          bottomRight: Radius.circular(30),
+        ),
+      ),
+      child: Column(
+        children: [
+          TopPage(
+              location: currentWeather?.areaName,
+              onLocationChange: handleLocationChange),
+          BodyPage(
+            wt: currentWeather,
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _dayForecasts() {
@@ -114,39 +152,7 @@ class _ForecastPageState extends State<ForecastPage> {
               } else if (snapshot.hasData) {
                 return ListView(
                   children: [
-                    SingleChildScrollView(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color.fromARGB(108, 188, 188, 188),
-                              spreadRadius: 5,
-                              blurRadius: 5,
-                              offset: Offset(2, 3),
-                            ),
-                          ],
-                          gradient: LinearGradient(
-                            colors: [Colors.blue, Colors.white],
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                          ),
-                          borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(30),
-                            bottomRight: Radius.circular(30),
-                          ),
-                        ),
-                        child: Column(
-                          children: [
-                            TopPage(
-                                location: currentWeather?.areaName,
-                                onLocationChange: handleLocationChange),
-                            BodyPage(
-                              wt: currentWeather,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                    SingleChildScrollView(child: _mainForecasts()),
                     _dayForecasts(),
                   ],
                 );
