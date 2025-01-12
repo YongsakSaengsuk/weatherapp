@@ -1,7 +1,4 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 class ForecastsCards extends StatefulWidget {
   const ForecastsCards({super.key, required this.minTemp, required this.maxTemp,required this.iconID});
