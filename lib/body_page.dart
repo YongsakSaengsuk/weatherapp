@@ -50,9 +50,11 @@ class _BodyPageState extends State<BodyPage> {
         Positioned(
           right: 0,
           bottom: 50,
-          child: Image.network(
-              width: 150,
-              'http://openweathermap.org/img/wn/${wt?.weatherIcon}@4x.png'),
+          child: wt?.weatherIcon != null
+              ? Image.network(
+            'http://openweathermap.org/img/wn/${wt?.weatherIcon}@4x.png',
+            width: 150)
+              : Placeholder(fallbackHeight: 150, fallbackWidth: 150),
         ),
         Positioned(
           bottom: 50,

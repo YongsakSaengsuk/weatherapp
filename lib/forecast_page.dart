@@ -30,12 +30,15 @@ class _ForecastPageState extends State<ForecastPage> {
     fetchWeather(cityName);
   }
 
-  Future<void> fetchWeather(String input) async {
+void fetchWeather(String input) async {
     try {
       Weather weather;
-      List<dynamic> forecast;
+      List<Weather> forecast;
 
       final latLonRegex = RegExp(r'^-?\d+(\.\d+)?,-?\d+(\.\d+)?$');
+      input = input.replaceAll(' ', '');
+      print("Input for fetching weather: $input");
+
       if (latLonRegex.hasMatch(input)) {
         final parts = input.split(',');
         double latitude = double.parse(parts[0].trim());
@@ -48,12 +51,19 @@ class _ForecastPageState extends State<ForecastPage> {
         forecast = await wf.fiveDayForecastByCityName(input);
         print("Fetching weather for city: $input");
       }
+      print(weather);
+      print('Wind Gust: ${weather.windGust ?? "No gust data available"}');
       setState(() {
         currentWeather = weather;
         fiveDayForecast = forecast;
       });
     } catch (e) {
-      print("Error fetching weather: $e");
+      print('Error fetching weather: $e');
+      print('Input causing error: $input');
+      setState(() {
+        currentWeather = null;
+        fiveDayForecast = [];
+      });
     }
   }
 
@@ -65,6 +75,7 @@ class _ForecastPageState extends State<ForecastPage> {
   }
 
   Widget _mainForecasts() {
+
     return Container(
       decoration: BoxDecoration(
         boxShadow: [
@@ -116,8 +127,9 @@ class _ForecastPageState extends State<ForecastPage> {
                       return ForecastsCards(
                         minTemp: day.tempMin?.celsius?.toInt() ?? 0,
                         maxTemp: day.tempMax?.celsius?.toInt() ?? 0,
-                        iconID:
-                            'http://openweathermap.org/img/wn/${day.weatherIcon}@4x.png',
+                        iconID:day.weatherIcon != null
+                            ? 'http://openweathermap.org/img/wn/${day.weatherIcon}@4x.png'
+                            : 'http://openweathermap.org/img/wn/03d@4x.png',
                       );
                     },
                   ),
