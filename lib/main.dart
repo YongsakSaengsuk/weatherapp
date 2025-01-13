@@ -28,6 +28,7 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     Widget home() {
       return Container(
         decoration: BoxDecoration(
